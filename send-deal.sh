@@ -6,8 +6,8 @@
 
 tmp_path=./tmp
 filesize=10240 #10K
-filecount=1 #‰∫§ÊòìÂåÖÂ§ßÂ∞è=filesize*filecount
-circle=1 #Âæ™ÁéØÊ¨°Êï∞
+filecount=1 #Ωª“◊∞¸¥Û–°=filesize*filecount
+circle=1 #—≠ª∑¥Œ ˝
 
 create_file() {
   #echo $1 
@@ -29,9 +29,9 @@ create_file() {
   echo "create ${newfile} time: `expr $end_time - $start_time` ms "
 }
 
-if echo $1 | grep -q '^t0[0-9]\{4,8\}$' ; then
+if echo $1 |grep -q '^t0[0-9]\{4,8\}$' ; then
   actor=$1
-elif echo ! $1 | grep -q '[^0-9]'; then
+elif echo ! $1 |grep -q '[^0-9]'; then
   count=$1
   if [ ! -z $2 ]; then 
     circle=${2:-1}
@@ -45,6 +45,9 @@ if [ -z $actor ]; then
   echo -e "\033[34m  miner_id abnormal. \033[0m"
   exit 1
 fi
+
+echo -e "\033[34m  lotus client query-ask $actor \033[0m"
+lotus client query-ask $actor
 
 if [ -z $count ]; then 
   if [ -z $2 ]; then 
@@ -79,10 +82,15 @@ do
     CID=`lotus client import $tmp_path/${newfile} |awk '{print $4}'`
     echo -e "\033[31m  $CID \033[0m"
     
-    echo -e "\033[34m  lotus client deal $CID $actor 0.0000000005 622080 \033[0m"
-    result=`lotus client deal $CID $actor 0.00000005 622080`
+    if [ "$CID" != "no" ]; then 
+      echo -e "\033[34m  lotus client deal $CID $actor 0.0000000005 622080 \033[0m"
+      result=`lotus client deal $CID $actor 0.00000005 622080`
+      echo -e "\033[31m  $result \033[0m"
+      echo -e "\033[34m  lotus client get-deal $result \033[0m"
+      #sleep 5
+      #lotus client get-deal $result
+    fi
     
-    echo -e "\033[31m  $result \033[0m"
     echo " "
   fi
   end=$[$(date +%s%N)/1000000]

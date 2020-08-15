@@ -118,7 +118,7 @@ do
 bind_addr = 0.0.0.0
 bind_port = $server_port
 bind_udp_port = 6001
-kcp_bind_port = $server_port
+#kcp_bind_port = $server_port
 
 log_file = /opt/frp/log_run_frps.log
 log_level = warn
@@ -127,24 +127,19 @@ disable_log_color = false
 detailed_errors_to_client = true
 
 authentication_method = token
-authenticate_heartbeats = false
-authenticate_new_work_conns = false
 token = C57bX6rtxYMrS7hw
 
-tcp_mux = true
-tls_only = false
-
-allow_ports = 6000-6009,1347,12340,23450-23459
-max_pool_count = 5
+allow_ports = 6000-6009,1347,5427-5430
+max_pool_count = 500
 max_ports_per_client = 0
 
 #dashboard
 dashboard_addr = 0.0.0.0
 dashboard_port = $dashboard_port
 dashboard_user = admin
-dashboard_pwd = pt2012" > /opt/frp/frps.ini && chmod 600 /opt/frp/frps.ini
+dashboard_pwd = admin888" > /opt/frp/frps.ini && chmod 600 /opt/frp/frps.ini
     
-    #防火墙
+    # 防火墙
     check_ufw
     if [ $status_ufw -eq 1 ]; then
       sudo ufw allow $server_port
@@ -159,7 +154,7 @@ dashboard_pwd = pt2012" > /opt/frp/frps.ini && chmod 600 /opt/frp/frps.ini
     fi
     echo " "
     
-    #开机启动 server 1
+    # 开机启动 server 1
     if [ ! -d "/etc/frp" ]; then 
       mkdir /etc/frp/ && chmod 700 /etc/frp/
     fi
@@ -205,7 +200,7 @@ log_level = warn
 log_max_days = 3
 
 token = C57bX6rtxYMrS7hw
-tcp_mux = true
+pool_count = 100
 " > /opt/frp/frpc.ini
     
     if [ ! -z $ssh_port ]; then
@@ -216,7 +211,7 @@ local_ip = 127.0.0.1
 local_port = 22
 remote_port = $ssh_port
 use_encryption = true
-use_compression = true
+#use_compression = true
 " >> /opt/frp/frpc.ini
     fi 
     
@@ -228,13 +223,13 @@ local_ip = 127.0.0.1
 local_port = $tcp_port
 remote_port = $tcp_port
 use_encryption = true
-use_compression = true
+#use_compression = true
 " >> /opt/frp/frpc.ini
     fi
     
     chmod 600 /opt/frp/frpc.ini
     
-    #防火墙
+    # 防火墙
     check_ufw
     if [ $status_ufw -eq 1 ]; then
       sudo ufw allow server_port

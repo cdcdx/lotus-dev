@@ -2,10 +2,10 @@
 
 #> nohup bash pledge-auto.sh 2>&1 &
 
-count=100   #
-interval=1200   #sec
+count=100   # count
+interval=1200   # sec
 
-#info
+# tips
 echo -e "\033[34m nohup bash pledge-auto.sh 2>&1 & \033[0m"
 
 for i in $(seq ${count}); 

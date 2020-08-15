@@ -54,6 +54,8 @@ do
     read -e -p "  scp path:" path
     if  [ ! -n "$path" ] && [ -n "$path_old" ]; then
       path=$path_old
+    elif [ $path -ge 0 ] && [ $path -le 255 ]; then
+      unset path
     fi
   done
   echo " "
@@ -73,7 +75,7 @@ do
   srcfile=$topath/"${path##*/}"
   #echo "${path%/*}".$topath.$srcfile
   
-  #显示符合条件文件
+  # 显示符合条件文件
   ls -lhrt $srcfile
   
   host=192.168.
@@ -85,7 +87,7 @@ do
       read -e -p "  please input ip segment: " segment
       if [ -z $segment ]; then
         segment=`ip addr show |awk -F '[ /]+' '$0~/inet/ && $0~/brd/ {print $3}' |awk -F "." '{print $3}'`
-      elif echo $segment | grep -q '[^0-9]'; then
+      elif echo $segment |grep -q '[^0-9]'; then
         unset segment
       elif [ $segment -le 0 ] && [ $segment -ge 255 ]; then
         unset segment
@@ -100,7 +102,7 @@ do
     read -e -p "  please input start ip: " start
     if [ -z $start ]; then
       unset start
-    elif echo $start | grep -q '[^0-9]'; then
+    elif echo $start |grep -q '[^0-9]'; then
       unset start
     elif [ $start -le 0 ] && [ $start -ge 255 ]; then
       unset start
@@ -111,7 +113,7 @@ do
     read -e -p "  please input  end ip: " end
     if [ -z $end ]; then
       end=$start
-    elif echo $end | grep -q '[^0-9]'; then
+    elif echo $end |grep -q '[^0-9]'; then
       unset end
     elif [ $end -le 0 ] && [ $end -ge 255 ]; then
       unset end
@@ -127,7 +129,7 @@ do
     ping -c1 -w5 ${host}${segment}.${i} > /dev/null
     if (($? == 0)); then
     {
-      #tips
+      # tips
       echo -e "\033[34m  scp $argu $srcfile ${host}${segment}.${i}:$topath/ \033[0m"
       
       expect -c "
